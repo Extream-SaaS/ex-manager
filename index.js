@@ -33,7 +33,7 @@ exports.manage = (event, context) => {
       const { create, read, update, remove } = require('./actions/organisation')(pgPool, publish);
       switch (message.command) {
         case 'create':
-          create(message.payload, message.user);
+          create(message.domain, message.action, message.command, message.socketId, message.payload, message.user);
           break;
       }
   }
