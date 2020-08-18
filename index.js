@@ -6,7 +6,11 @@ const {PubSub} = require('@google-cloud/pubsub');
  * @param {!Object} context Metadata for the event.
  */
 exports.manage = (event, context) => {
-  const message = event.data ? Buffer.from(event.data, 'base64').toString() : null;
+  const message = event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
+  if (message === null) {
+    console.log('null');
+    return true;
+  }
   switch (message.action) {
     case 'organisation':
       const { create, read, update, remove } = require('./actions/organisation');
@@ -17,4 +21,5 @@ exports.manage = (event, context) => {
       }
   }
   console.log('message', message);
+  return true;
 };
