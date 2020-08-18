@@ -12,7 +12,7 @@ module.exports = (injectedPgPool, injectedPublish) => {
 };
 const create = async (domain, action, command, socketId, data, user) => {
   console.log('data', data, user);
-  const queryString = `INSERT INTO organisations (name, website, user_id, parent, landing_page) VALUES ('${data.name}', '${data.website}', ${user.id}, ${data.parent}, '${data.landing_page}')`;
+  const queryString = `INSERT INTO organisations (name, website, user_id, parent, landing_page) VALUES ('${data.name}', '${data.website}', 0, ${data.parent}, '${data.landing_page}')`;
   const organisation = await pgPool.query(queryString);
   console.log(organisation);
   publish('ex-gateway', { domain, action, command, payload: organisation, user, socketId });
@@ -36,5 +36,5 @@ const update = async (data, user) => {
   publish('ex-gateway', organisation);
 };
 const remove = async (id, user) => {
-  
+
 };
