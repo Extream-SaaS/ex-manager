@@ -1,4 +1,21 @@
 const {PubSub} = require('@google-cloud/pubsub');
+const pgPool = require("./db/pgWrapper");
+const publish = (
+  topicName = 'ex-gateway',
+  data = {}
+) => {
+  // Instantiates a client
+  const pubsub = new PubSub({grpc, projectId});
+
+  async function publishMessage() {
+    const dataBuffer = Buffer.from(JSON.stringify(data));
+
+    const messageId = await pubsub.topic(topicName).publish(dataBuffer);
+    return messageId;
+  }
+
+  return publishMessage();
+};
 /**
  * Triggered from a message on a Cloud Pub/Sub topic.
  *
@@ -13,7 +30,7 @@ exports.manage = (event, context) => {
   }
   switch (message.action) {
     case 'organisation':
-      const { create, read, update, remove } = require('./actions/organisation');
+      const { create, read, update, remove } = require('./actions/organisation')(pgPool, publish);
       switch (message.command) {
         case 'create':
           create(message.payload, message.user);
