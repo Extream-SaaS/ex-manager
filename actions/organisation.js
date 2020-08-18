@@ -35,3 +35,6 @@ const update = async (data, user) => {
   console.log(organisation);
   publish('ex-gateway', organisation);
 };
+const remove = async (id, user) => {
+  
+};
