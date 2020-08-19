@@ -11,11 +11,17 @@ module.exports = (injectedPgPool, injectedPublish) => {
   };
 };
 const create = async (domain, action, command, socketId, data, user) => {
-  console.log('data', data, user);
-  const queryString = `INSERT INTO organisations (name, website, user_id, parent, landing_page) VALUES ('${data.name}', '${data.website}', 0, ${data.parent}, '${data.landing_page}')`;
-  const organisation = await pgPool.query(queryString);
-  console.log(organisation);
-  publish('ex-gateway', { domain, action, command, payload: organisation, user, socketId });
+  try {
+    console.log('data', data, user);
+    const queryString = `INSERT INTO organisations (name, website, user_id, parent, landing_page) VALUES ('${data.name}', '${data.website}', 0, ${data.parent}, '${data.landing_page}')`;
+    const organisation = await pgPool.query(queryString);
+    console.log(organisation);
+    publish('ex-gateway', { domain, action, command, payload: organisation, user, socketId });
+  } catch (error) {
+    console.log('error in insert', error);
+    publish('ex-gateway', { error: error.message, domain, action, command, payload: organisation, user, socketId });
+    throw error;
+  }
 };
 const read = async ({ id }) => {
   console.log(id);
