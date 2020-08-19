@@ -15,6 +15,7 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
     const fields = [];
     const values = [];
+    const index = [];
     for (let field in payload) {
       if (field === 'primary_contact') {
         if (!payload[field].id) {
@@ -23,16 +24,17 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
           payload[field].id = user.id;
         }
         fields.push('user_id');
-        values.push(`'${payload[field].id}'`);
+        values.push(payload[field].id);
       } else {
         fields.push(field);
-        values.push(`'${payload[field]}'`);
+        values.push(payload[field]);
       }
+      index.push(`$${fields.length}`);
     }
-    const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${values.join(',')})`;
+    const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${index.join(',')}) RETURNING public_id`;
     console.log('query', queryString);
-    const organisation = await pgPool.query(queryString);
-    publish('ex-gateway', { domain, action, command, payload: organisation, user, socketId });
+    const organisation = await pgPool.query(queryString, values);
+    publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.rows[0].public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
     publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
