@@ -11,32 +11,31 @@ module.exports = (injectedPgPool, injectedPublish, injectedAxios) => {
     remove
   };
 };
-const create = async (domain, action, command, socketId, data, user) => {
+const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    console.log('data', data, user);
     const fields = [];
     const values = [];
-    for (let field in data) {
+    for (let field in payload) {
       if (field === 'primary_contact') {
-        if (!data[field].id) {
+        if (!payload[field].id) {
           // create a user \\
-          const user = await axios.post(`${process.env.EXAUTH}/auth/invite`, data[field]);
-          data[field].id = user.id;
+          const user = await axios.post(`${process.env.EXAUTH}/auth/invite`, payload[field]);
+          payload[field].id = user.id;
         }
         fields.push('user_id');
-        values.push(data[field].id);
+        values.push(payload[field].id);
       } else {
         fields.push(field);
-        values.push(`'${data[field]}'`);
+        values.push(`'${payload[field]}'`);
       }
     }
     const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${values.join(',')})`;
+    console.log('query', queryString);
     const organisation = await pgPool.query(queryString);
-    console.log(organisation);
     publish('ex-gateway', { domain, action, command, payload: organisation, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
-    publish('ex-gateway', { error: error.message, domain, action, command, payload: organisation, user, socketId });
+    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
     throw error;
   }
 };

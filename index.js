@@ -34,7 +34,8 @@ exports.manage = async (event, context) => {
       switch (message.command) {
         case 'create':
           try {
-            const created = await create(message.domain, message.action, message.command, message.socketId, message.payload, message.user);
+            console.log('message', message);
+            const created = await create(message);
           } catch (error) {
             console.log('error in create', error);
           }
