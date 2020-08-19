@@ -22,6 +22,7 @@ const publish = (
  * @param {!Object} context Metadata for the event.
  */
 exports.manage = async (event, context) => {
+  const axios = require("axios");
   const pgPool = require("./db/pgWrapper");
   console.log('pgPool', pgPool);
   const message = event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
@@ -31,7 +32,7 @@ exports.manage = async (event, context) => {
   }
   switch (message.action) {
     case 'organisation':
-      const { create, read, update, remove } = require('./actions/organisation')(pgPool, publish);
+      const { create, read, update, remove } = require('./actions/organisation')(pgPool, publish, axios);
       switch (message.command) {
         case 'create':
           try {

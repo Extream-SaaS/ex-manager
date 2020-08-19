@@ -1,8 +1,9 @@
-let pgPool, publish;
+let pgPool, publish, axios;
 
-module.exports = (injectedPgPool, injectedPublish) => {
+module.exports = (injectedPgPool, injectedPublish, injectedAxios) => {
   pgPool = injectedPgPool;
   publish = injectedPublish;
+  axios = injectedAxios;
   return {
     create,
     read,
@@ -13,7 +14,23 @@ module.exports = (injectedPgPool, injectedPublish) => {
 const create = async (domain, action, command, socketId, data, user) => {
   try {
     console.log('data', data, user);
-    const queryString = `INSERT INTO organisations (name, website, user_id, parent, landing_page) VALUES ('${data.name}', '${data.website}', 0, ${data.parent}, '${data.landing_page}')`;
+    const fields = [];
+    const values = [];
+    for (let field in data) {
+      if (field === 'primary_contact') {
+        if (data[field].id) {
+          // is an existing account \\
+          delete data[field];
+          data.user_id = data[field].id;
+        } else {
+          // create a user \\
+          // axios.post()
+        }
+      }
+      fields.push(field);
+      values.push(`'${data[field]}'`);
+    }
+    const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${values.join(',')})`;
     const organisation = await pgPool.query(queryString);
     console.log(organisation);
     publish('ex-gateway', { domain, action, command, payload: organisation, user, socketId });
