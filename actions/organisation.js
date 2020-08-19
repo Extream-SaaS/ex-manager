@@ -32,7 +32,7 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
       index.push(`$${fields.length}`);
     }
     const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${index.join(',')}) RETURNING public_id`;
-    console.log('query', queryString);
+    console.log('query', queryString, values);
     const organisation = await pgPool.query(queryString, values);
     publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.rows[0].public_id }, user, socketId });
   } catch (error) {
