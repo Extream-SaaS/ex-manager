@@ -23,7 +23,7 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
           payload[field].id = user.id;
         }
         fields.push('user_id');
-        values.push(payload[field].id);
+        values.push(`'${payload[field].id}'`);
       } else {
         fields.push(field);
         values.push(`'${payload[field]}'`);
