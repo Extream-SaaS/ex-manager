@@ -24,10 +24,8 @@ const publish = (
 exports.manage = async (event, context) => {
   const axios = require("axios");
   const pgPool = require("./db/pgWrapper");
-  console.log('pgPool', pgPool);
   const message = event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
-    console.log('null');
     return true;
   }
   switch (message.action) {

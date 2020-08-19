@@ -18,17 +18,17 @@ const create = async (domain, action, command, socketId, data, user) => {
     const values = [];
     for (let field in data) {
       if (field === 'primary_contact') {
-        if (data[field].id) {
-          // is an existing account \\
-          delete data[field];
-          data.user_id = data[field].id;
-        } else {
+        if (!data[field].id) {
           // create a user \\
-          // axios.post()
+          const user = await axios.post(`${process.env.EXAUTH}/auth/invite`, data[field]);
+          data[field].id = user.id;
         }
+        fields.push('user_id');
+        values.push(data[field].id);
+      } else {
+        fields.push(field);
+        values.push(`'${data[field]}'`);
       }
-      fields.push(field);
-      values.push(`'${data[field]}'`);
     }
     const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${values.join(',')})`;
     const organisation = await pgPool.query(queryString);
