@@ -1,7 +1,7 @@
-let pgPool, publish, axios;
+let Organisation, publish, axios;
 
-module.exports = (injectedPgPool, injectedPublish, injectedAxios) => {
-  pgPool = injectedPgPool;
+module.exports = (injectedOrganisation, injectedPublish, injectedAxios) => {
+  Organisation = injectedOrganisation;
   publish = injectedPublish;
   axios = injectedAxios;
   return {
@@ -13,55 +13,75 @@ module.exports = (injectedPgPool, injectedPublish, injectedAxios) => {
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const fields = [];
-    const values = [];
-    const index = [];
-    for (let field in payload) {
-      if (field === 'primary_contact') {
-        if (!payload[field].id) {
-          // create a user \\
-          const user = await axios.post(`${process.env.EXAUTH}/auth/invite`, payload[field]);
-          payload[field].id = user.id;
-        }
-        fields.push('user_id');
-        values.push(`'${payload[field].id}'`);
-      } else {
-        fields.push(field);
-        values.push(`'${payload[field]}'`);
+    if (payload.primary_contact) {
+      if (!payload.primary_contact.id) {
+        // create a user \\
+        const user = await axios.post(`${process.env.EXAUTH}/auth/invite`, payload[field]);
+        payload.primary_contact.id = user.id;
       }
-      index.push(`$${fields.length}`);
+      payload.primary_contact = payload.primary_contact.id;
     }
-    // const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${index.join(',')}) RETURNING public_id`;
-    // console.log('query', queryString, values);
-    // const organisation = await pgPool.query(queryString, values);
-    const queryString = `INSERT INTO organisations (${fields.join(',')}) VALUES (${values.join(',')}) RETURNING public_id`;
-    console.log('query', queryString, values);
-    const organisation = await pgPool.query(queryString);
-    publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.rows[0].public_id }, user, socketId });
+    const organisation = await Organisation.create({ ...payload, added_by: user.public_id });
+    publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
     publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
     throw error;
   }
 };
-const read = async ({ id }) => {
-  console.log(id);
-  const queryString = `SELECT * FROM organisations WHERE public_id='${id}'`;
-  const organisation = await pgPool.query(queryString);
-  publish('ex-gateway', organisation);
-};
-const update = async (data, user) => {
-  console.log('data', data, user);
-  const prepObj = [];
-  for (let key in data) {
-    prepObj.push(`${key}='${data[key]}'`);
+const read = async ({ domain, action, command, socketId, payload, user }) => {
+  try {
+    const organisation = await Organisation.findOne({ 
+      where: {
+        public_id: payload.id 
+      },
+      exclude: ['id']
+    });
+    if (organisation === null) {
+      throw new Error('organisation not found');
+    }
+    console.log(organisation.dataValues);
+    publish('ex-gateway', { domain, action, command, payload: organisation.dataValues, user, socketId });
+  } catch (error) {
+    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
-  const prepString = prepObj.join(', ');
-  const queryString = `UPDATE organisations SET ${prepString} WHERE public_id='${id}'`;
-  const organisation = await pgPool.query(queryString);
-  console.log(organisation);
-  publish('ex-gateway', organisation);
 };
-const remove = async (id, user) => {
-
+const update = async ({ domain, action, command, socketId, payload, user }) => {
+  console.log('data', payload, user);
+  try {
+    const organisation = await Organisation.findOne({ 
+      where: {
+        public_id: payload.id 
+      },
+      exclude: ['id']
+    });
+    if (organisation === null) {
+      throw new Error('organisation not found');
+    }
+    for (let field in payload) {
+      organisation[field] = payload[field];
+    }
+    await organisation.save();
+    console.log(organisation.dataValues);
+    publish('ex-gateway', { domain, action, command, payload: organisation.dataValues, user, socketId });
+  } catch (error) {
+    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+  }
+};
+const remove = async ({ domain, action, command, socketId, payload, user }) => {
+  console.log('data', payload, user);
+  try {
+    const organisation = await Organisation.findOne({ 
+      where: {
+        public_id: payload.id 
+      }
+    });
+    if (organisation === null) {
+      throw new Error('organisation not found');
+    }
+    await organisation.destroy();
+    publish('ex-gateway', { domain, action, command, user, socketId });
+  } catch (error) {
+    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+  }
 };

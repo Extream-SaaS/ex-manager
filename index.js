@@ -24,25 +24,48 @@ const publish = (
  */
 exports.manage = async (event, context) => {
   const axios = require("axios");
-  const pgPool = require("./db/pgWrapper");
+  const { Page, Organisation } = await require("./db")();
   const message = event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
     return true;
   }
   switch (message.action) {
     case 'organisation':
-      const { create, read, update, remove } = require('./actions/organisation')(pgPool, publish, axios);
+      const { create, read, update, remove } = require('./actions/organisation')(Organisation, publish, axios);
       switch (message.command) {
         case 'create':
           try {
             console.log('message', message);
-            const created = await create(message);
+            await create(message);
           } catch (error) {
             console.log('error in create', error);
           }
           break;
+        case 'read':
+          try {
+            console.log('message', message);
+            await read(message);
+          } catch (error) {
+            console.log('error in read', error);
+          }
+          break;
+        case 'update':
+          try {
+            console.log('message', message);
+            await update(message);
+          } catch (error) {
+            console.log('error in update', error);
+          }
+          break;
+        case 'delete':
+          try {
+            console.log('message', message);
+            await remove(message);
+          } catch (error) {
+            console.log('error in delete', error);
+          }
+          break;
       }
   }
-  console.log('message', message);
   return true;
 };
