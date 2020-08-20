@@ -19,8 +19,10 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
         const user = await axios.post(`${process.env.EXAUTH}/auth/invite`, payload[field]);
         payload.primary_contact.id = user.id;
       }
-      payload.primary_contact = payload.primary_contact.id;
+      payload.user_id = payload.primary_contact.id;
+      delete payload.primary_contact;
     }
+    payload.createdBy = user.public_id;
     const organisation = await Organisation.create({ ...payload, added_by: user.public_id });
     publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.public_id }, user, socketId });
   } catch (error) {
