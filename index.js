@@ -27,8 +27,7 @@ exports.manage = async (event, context) => {
   const { sequelize, Page, Organisation, Event, Itinerary } = await require("./db")();
   const message = event && event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
-    sequelize.close();
-    return true;
+    process.exit();
   }
   switch (message.action) {
     case 'organisation':
@@ -188,7 +187,5 @@ exports.manage = async (event, context) => {
       })();
       break;
   }
-  console.log('closing sequelize');
-  sequelize.close();
-  return true;
+  process.exit();
 };
