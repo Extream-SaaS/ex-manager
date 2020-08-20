@@ -33,6 +33,7 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
 };
 const read = async ({ domain, action, command, socketId, payload, user }) => {
   try {
+    console.log('reading');
     const organisation = await Organisation.findOne({ 
       where: {
         public_id: payload.id 
@@ -45,6 +46,7 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
     console.log(organisation.dataValues);
     publish('ex-gateway', { domain, action, command, payload: organisation.dataValues, user, socketId });
   } catch (error) {
+    console.log('publishing error', error);
     publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
