@@ -14,6 +14,7 @@ module.exports = async () => {
         console.log('tables sync complete');
     }
     return {
+        sequelize,
         Page,
         Organisation
     };

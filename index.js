@@ -24,7 +24,7 @@ const publish = (
  */
 exports.manage = async (event, context) => {
   const axios = require("axios");
-  const { Page, Organisation } = await require("./db")();
+  const { sequelize, Page, Organisation } = await require("./db")();
   const message = event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
     return true;
@@ -67,5 +67,6 @@ exports.manage = async (event, context) => {
           break;
       }
   }
+  sequelize.close();
   return true;
 };
