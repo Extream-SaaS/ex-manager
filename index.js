@@ -188,6 +188,7 @@ exports.manage = async (event, context) => {
       })();
       break;
   }
+  console.log('closing sequelize');
   sequelize.close();
   return true;
 };
