@@ -29,6 +29,7 @@ exports.manage = async (event, context, callback) => {
   if (message === null) {
     callback();
   }
+  console.log('message', message);
   switch (message.action) {
     case 'organisation':
       await (async () => {
@@ -71,7 +72,8 @@ exports.manage = async (event, context, callback) => {
       break;
     case 'event':
       await (async () => {
-        const { create, read, update, remove } = require('./actions/event')(Event, publish, axios);
+        console.log(message.action);
+        const { create, read, update, remove, get } = require('./actions/event')(Organisation, Event, Itinerary, publish, axios);
         switch (message.command) {
           case 'create':
             try {
@@ -103,6 +105,14 @@ exports.manage = async (event, context, callback) => {
               await remove(message);
             } catch (error) {
               console.log('error in delete', error);
+            }
+            break;
+          case 'get':
+            try {
+              console.log('message', message);
+              await get(message);
+            } catch (error) {
+              console.log('error in get', error);
             }
             break;
         }
@@ -110,7 +120,7 @@ exports.manage = async (event, context, callback) => {
       break;
     case 'itinerary':
       await (async () => {
-        const { create, read, update, remove } = require('./actions/itinerary')(Itinerary, publish, axios);
+        const { create, read, update, remove, get } = require('./actions/itinerary')(Event, Itinerary, publish, axios);
         switch (message.command) {
           case 'create':
             try {
@@ -142,6 +152,14 @@ exports.manage = async (event, context, callback) => {
               await remove(message);
             } catch (error) {
               console.log('error in delete', error);
+            }
+            break;
+          case 'get':
+            try {
+              console.log('message', message);
+              await get(message);
+            } catch (error) {
+              console.log('error in get', error);
             }
             break;
         }
@@ -181,6 +199,14 @@ exports.manage = async (event, context, callback) => {
               await remove(message);
             } catch (error) {
               console.log('error in delete', error);
+            }
+            break;
+          case 'get':
+            try {
+              console.log('message', message);
+              await get(message);
+            } catch (error) {
+              console.log('error in get', error);
             }
             break;
         }

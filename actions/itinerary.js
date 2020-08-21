@@ -1,6 +1,7 @@
-let Itinerary, publish, axios;
+let Event, Itinerary, publish, axios;
 
-module.exports = (injectedItinerary, injectedPublish, injectedAxios) => {
+module.exports = (injectedEvent, injectedItinerary, injectedPublish, injectedAxios) => {
+  Event = injectedEvent;
   Itinerary = injectedItinerary;
   publish = injectedPublish;
   axios = injectedAxios;
@@ -8,7 +9,8 @@ module.exports = (injectedItinerary, injectedPublish, injectedAxios) => {
     create,
     read,
     update,
-    remove
+    remove,
+    get
   };
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
@@ -73,6 +75,38 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await itinerary.destroy();
     await publish('ex-gateway', { domain, action, command, user, socketId });
+  } catch (error) {
+    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+  }
+};
+const get = async ({ domain, action, command, socketId, payload, user }) => {
+  try {
+    let values;
+    if (payload.event) {
+      const itineraries = await Itinerary.findAll({ 
+        where: {
+          event: payload.event 
+        },
+        include: Event,
+        exclude: ['id']
+      });
+      if (itineraries === null) {
+        throw new Error('event not found');
+      }
+      values = itineraries.map(row => row.dataValues);
+    } else {
+      const itinerary = await Itinerary.findOne({ 
+        where: {
+          public_id: payload.id 
+        },
+        exclude: ['id']
+      });
+      if (itinerary === null) {
+        throw new Error('itinerary not found');
+      }
+      values = itinerary.dataValues;
+    }
+    await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }

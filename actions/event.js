@@ -1,14 +1,17 @@
-let Event, publish, axios;
+let Organisation, Event, Itinerary, publish, axios;
 
-module.exports = (injectedEvent, injectedPublish, injectedAxios) => {
+module.exports = (injectedOrganisation, injectedEvent, injectedItinerary, injectedPublish, injectedAxios) => {
+  Organisation = injectedOrganisation;
   Event = injectedEvent;
+  Itinerary = injectedItinerary;
   publish = injectedPublish;
   axios = injectedAxios;
   return {
     create,
     read,
     update,
-    remove
+    remove,
+    get
   };
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
@@ -73,6 +76,38 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await event.destroy();
     await publish('ex-gateway', { domain, action, command, user, socketId });
+  } catch (error) {
+    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+  }
+};
+const get = async ({ domain, action, command, socketId, payload, user }) => {
+  try {
+    let values;
+    if (payload.organisation) {
+      const events = await Event.findAll({ 
+        where: {
+          organisation: payload.organisation 
+        },
+        include: [Organisation, Itinerary],
+        exclude: ['id']
+      });
+      if (events === null) {
+        throw new Error('event not found');
+      }
+      values = events.map(row => row.dataValues);
+    } else {
+      const event = await Event.findOne({ 
+        where: {
+          public_id: payload.id 
+        },
+        exclude: ['id']
+      });
+      if (event === null) {
+        throw new Error('event not found');
+      }
+      values = event.dataValues;
+    }
+    await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
