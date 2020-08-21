@@ -13,7 +13,7 @@ module.exports = (injectedEvent, injectedPublish, injectedAxios) => {
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const event = await Event.create({ ...payload, added_by: user.public_id });
+    const event = await Event.create({ ...payload, added_by: user.id });
     await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: event.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);

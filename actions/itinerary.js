@@ -13,7 +13,7 @@ module.exports = (injectedItinerary, injectedPublish, injectedAxios) => {
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const itinerary = await Itinerary.create({ ...payload, added_by: user.public_id });
+    const itinerary = await Itinerary.create({ ...payload, added_by: user.id });
     await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);

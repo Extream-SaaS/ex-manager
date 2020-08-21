@@ -23,7 +23,7 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
       delete payload.primary_contact;
     }
     console.log('user', user);
-    const organisation = await Organisation.create({ ...payload, createdBy: user.public_id });
+    const organisation = await Organisation.create({ ...payload, createdBy: user.id });
     await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
