@@ -14,10 +14,10 @@ module.exports = (injectedItinerary, injectedPublish, injectedAxios) => {
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
     const itinerary = await Itinerary.create({ ...payload, added_by: user.public_id });
-    publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
+    await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
-    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
     throw error;
   }
 };
@@ -33,9 +33,9 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
       throw new Error('itinerary not found');
     }
     console.log(itinerary.dataValues);
-    publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
+    await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
-    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
 const update = async ({ domain, action, command, socketId, payload, user }) => {
@@ -55,9 +55,9 @@ const update = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await itinerary.save();
     console.log(itinerary.dataValues);
-    publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
+    await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
-    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
 const remove = async ({ domain, action, command, socketId, payload, user }) => {
@@ -72,8 +72,8 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
       throw new Error('itinerary not found');
     }
     await itinerary.destroy();
-    publish('ex-gateway', { domain, action, command, user, socketId });
+    await publish('ex-gateway', { domain, action, command, user, socketId });
   } catch (error) {
-    publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
