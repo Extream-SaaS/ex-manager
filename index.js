@@ -22,12 +22,12 @@ const publish = (
  * @param {!Object} event Event payload.
  * @param {!Object} context Metadata for the event.
  */
-exports.manage = async (event, context) => {
+exports.manage = async (event, context, callback) => {
   const axios = require("axios");
   const { sequelize, Page, Organisation, Event, Itinerary } = await require("./db")();
   const message = event && event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
-    process.exit();
+    callback();
   }
   switch (message.action) {
     case 'organisation':
@@ -187,5 +187,5 @@ exports.manage = async (event, context) => {
       })();
       break;
   }
-  process.exit();
+  callback();
 };
