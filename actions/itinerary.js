@@ -10,7 +10,9 @@ module.exports = (injectedEvent, injectedItinerary, injectedPublish, injectedAxi
     read,
     update,
     remove,
-    get
+    get,
+    assign,
+    unassign
   };
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
@@ -34,7 +36,6 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
     if (itinerary === null) {
       throw new Error('itinerary not found');
     }
-    console.log(itinerary.dataValues);
     await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -109,5 +110,30 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
     await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+  }
+};
+const assign = async ({domain, action, command, socketId, payload, user}) => {
+  try {
+    const itinerary = await Itinerary.findOne(payload.itinerary);
+    const items = itinerary.items;
+    items.push(payload.id);
+    itinerary.items = items;
+    await itinerary.save();
+  } catch (error) {
+    console.log('error in insert', error);
+    throw error;
+  }
+};
+const unassign = async ({domain, action, command, socketId, payload, user}) => {
+  try {
+    const itinerary = await Itinerary.findOne(payload.itinerary);
+    const items = itinerary.items;
+    const ind = items.indexOf(payload.id);
+    items.splice(ind, 1);
+    itinerary.items = items;
+    await itinerary.save();
+  } catch (error) {
+    console.log('error in insert', error);
+    throw error;
   }
 };

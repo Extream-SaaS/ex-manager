@@ -100,6 +100,7 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
         where: {
           public_id: payload.id 
         },
+        include: [Itinerary],
         exclude: ['id']
       });
       if (event === null) {

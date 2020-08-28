@@ -165,6 +165,37 @@ exports.manage = async (event, context, callback) => {
         }
       })();
       break;
+      case 'item':
+        await (async () => {
+          const { assign, unassign } = require('./actions/itinerary')(Event, Itinerary, publish, axios);
+          switch (message.command) {
+            case 'create':
+              try {
+                console.log('message', message);
+                await assign(message);
+              } catch (error) {
+                console.log('error in assigning', error);
+              }
+              break;
+            case 'delete':
+              try {
+                console.log('message', message);
+                await unassign(message);
+              } catch (error) {
+                console.log('error in unassigning', error);
+              }
+              break;
+            case 'get':
+              try {
+                console.log('message', message);
+                await get(message);
+              } catch (error) {
+                console.log('error in get', error);
+              }
+              break;
+          }
+        })();
+        break;
     case 'page':
       await (async () => {
         const { create, read, update, remove } = require('./actions/page')(Page, publish, axios);

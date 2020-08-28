@@ -30,6 +30,9 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
                 key: 'public_id'
             }
         },
+        items: {
+            type: DataTypes.JSONB
+        },
         landing_page: {
             type: DataTypes.UUID,
             references: {
