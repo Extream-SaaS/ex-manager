@@ -107,13 +107,17 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
   try {
     let values;
     if (payload.organisation) {
-      const events = await Event.findAll({ 
+      const organisation = await Organisation.find({ 
         where: {
-          organisation: payload.organisation 
+          public_id: payload.organisation 
         },
-        include: [Organisation, Itinerary],
+        include: [Event],
         exclude: ['id']
       });
+      if (organisation === null) {
+        throw new Error('organisation not found');
+      }
+      const events = orgaisation.getEvents();
       if (events === null) {
         throw new Error('event not found');
       }
@@ -123,7 +127,7 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
         where: {
           public_id: payload.id 
         },
-        include: [Itinerary],
+        include: [Organisation, Itinerary],
         exclude: ['id']
       });
       if (event === null) {
