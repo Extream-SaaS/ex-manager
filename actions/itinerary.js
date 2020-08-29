@@ -119,7 +119,7 @@ const assign = async ({domain, action, command, socketId, payload, user}) => {
         public_id: payload.itinerary
       }
     });
-    const items = itinerary.items;
+    const items = itinerary.items || [];
     items.push(payload.id);
     itinerary.items = items;
     await itinerary.save();
