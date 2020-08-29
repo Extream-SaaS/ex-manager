@@ -17,11 +17,23 @@ module.exports = (injectedEvent, injectedItinerary, injectedPublish, injectedAxi
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const itinerary = await Itinerary.create({ ...payload, added_by: user.id });
-    if (process.env.NODE_ENV !== 'production') {
-      return itinerary;
+    if (payload.event) {
+      const event = await Event.findOne({
+        where: {
+          public_id: payload.event
+        }
+      });
+      if (!event) {
+        throw new Error('event not found');
+      }
+      const itinerary = await event.createItinerary({ ...payload, createdBy: user.id });
+      if (process.env.NODE_ENV !== 'production') {
+        return itinerary;
+      }
+      await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
+    } else {
+      throw new Error('event is required');
     }
-    await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });

@@ -16,11 +16,24 @@ module.exports = (injectedOrganisation, injectedEvent, injectedItinerary, inject
 };
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const event = await Event.create({ ...payload, added_by: user.id });
-    if (process.env.NODE_ENV !== 'production') {
-      return { ...payload, public_id: event.public_id };
+    if (payload.organisation) {
+      const organisation = await Organisation.findOne({
+        where: {
+          public_id: payload.organisation
+        }
+      });
+      if (!organisation) {
+        throw new Error('organisation not found');
+      }
+      const event = await organisation.createEvent({ ...payload, createdBy: user.id });
+      if (process.env.NODE_ENV !== 'production') {
+        console.log({ ...payload, public_id: event.public_id });
+        return { ...payload, public_id: event.public_id };
+      }
+      await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: event.public_id }, user, socketId });
+    } else {
+      throw new Error('organisation is required');
     }
-    await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: event.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });

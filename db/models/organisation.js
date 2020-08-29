@@ -27,9 +27,10 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Organisation'
     });
-    Organisation.hasMany(Event, { sourceKey: 'public_id' });
-    Organisation.hasOne(Organisation, { sourceKey: 'public_id', foreignKey: 'parent' });
+    Organisation.hasMany(Event, { sourceKey: 'public_id', foreignKey: 'organisation' });
+    Event.belongsTo(Organisation, { targetKey: 'public_id', foreignKey: 'organisation' });
+    Organisation.belongsTo(Organisation, { targetKey: 'public_id', foreignKey: 'parent' });
     Organisation.hasMany(Organisation, { sourceKey: 'parent',  foreignKey: 'public_id' });
-    Organisation.hasOne(Page, { sourceKey: 'public_id', foreignKey: 'landing_page' });
+    Organisation.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'landing_page' });
     return Organisation;
 };
