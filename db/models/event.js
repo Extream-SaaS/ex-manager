@@ -1,7 +1,6 @@
 module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
     const Page = require('./page')(sequelize, { Sequelize, Model, DataTypes });
-    const Organisation = require('./organisation')(sequelize, { Sequelize, Model, DataTypes });
-    class Event extends Model {};
+    class Event extends Model {}
 
     Event.init({
         public_id: {
@@ -23,20 +22,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         end_date: {
             type: DataTypes.DATE
         },
-        parent: {
-            type: DataTypes.UUID,
-            references: {
-                model: Event,
-                key: 'public_id'
-            }
-        },
-        landing_page: {
-            type: DataTypes.UUID,
-            references: {
-                model: Page,
-                key: 'public_id'
-            }
-        },
         createdBy: {
             type: DataTypes.UUID
         }
@@ -44,6 +29,8 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Event'
     });
-    Organisation.hasMany(Event, { foreignKey: 'public_id' });
+    Event.hasOne(Event, { sourceKey: 'public_id', foreignKey: 'parent' });
+    Event.hasMany(Event, { sourceKey: 'parent', foreignKey: 'public_id' });
+    Event.hasOne(Page, { sourceKey: 'public_id', foreignKey: 'landing_page' });
     return Event;
 };

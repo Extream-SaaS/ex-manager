@@ -18,13 +18,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         user_id: {
             type: DataTypes.UUID
         },
-        parent: {
-            type: DataTypes.UUID,
-            references: {
-                model: Page,
-                key: 'public_id'
-            }
-        },
         content: {
             type: DataTypes.STRING
         },
@@ -35,5 +28,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Page'
     });
+    Page.hasOne(Page, { sourceKey: 'public_id', foreignKey: 'parent' });
     return Page;
 };

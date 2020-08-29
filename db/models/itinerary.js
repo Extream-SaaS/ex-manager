@@ -23,22 +23,8 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         end_date: {
             type: DataTypes.DATE
         },
-        event: {
-            type: DataTypes.UUID,
-            references: {
-                model: Event,
-                key: 'public_id'
-            }
-        },
         items: {
             type: DataTypes.JSONB
-        },
-        landing_page: {
-            type: DataTypes.UUID,
-            references: {
-                model: Page,
-                key: 'public_id'
-            }
         },
         createdBy: {
             type: DataTypes.UUID
@@ -47,5 +33,7 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Itinerary'
     });
+    Itinerary.hasOne(Page, { sourceKey: 'public_id', foreignKey: 'landing_page' });
+    Itinerary.hasOne(Event, { sourceKey: 'public_id', foreignKey: 'event' });
     return Itinerary;
 };
