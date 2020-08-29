@@ -118,7 +118,7 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
       if (event === null) {
         throw new Error('event not found');
       }
-      const itineraries = event.getItineraries();
+      const itineraries = await event.getItineraries();
       if (itineraries === null) {
         throw new Error('itineraries not found');
       }
@@ -140,6 +140,9 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
@@ -162,7 +165,9 @@ const assign = async ({domain, action, command, socketId, payload, user}) => {
       return itinerary;
     }
   } catch (error) {
-    console.log('error in insert', error);
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     throw error;
   }
 };
@@ -185,7 +190,9 @@ const unassign = async ({domain, action, command, socketId, payload, user}) => {
       return itinerary;
     }
   } catch (error) {
-    console.log('error in insert', error);
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     throw error;
   }
 };

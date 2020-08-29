@@ -35,7 +35,9 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
       throw new Error('organisation is required');
     }
   } catch (error) {
-    console.log('error in insert', error);
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
     throw error;
   }
@@ -56,6 +58,9 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await publish('ex-gateway', { domain, action, command, payload: event.dataValues, user, socketId });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
@@ -80,6 +85,9 @@ const update = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await publish('ex-gateway', { domain, action, command, payload: event.dataValues, user, socketId });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
@@ -100,6 +108,9 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await publish('ex-gateway', { domain, action, command, user, socketId });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
@@ -117,7 +128,7 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
       if (organisation === null) {
         throw new Error('organisation not found');
       }
-      const events = organisation.getEvents();
+      const events = await organisation.getEvents();
       if (events === null) {
         throw new Error('events not found');
       }
@@ -140,6 +151,9 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw error;
+    }
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
