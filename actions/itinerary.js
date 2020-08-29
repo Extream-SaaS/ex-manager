@@ -108,15 +108,19 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
   try {
     let values;
     if (payload.event) {
-      const itineraries = await Itinerary.findAll({ 
+      const event = await Event.findOne({ 
         where: {
-          event: payload.event 
+          public_id: payload.event 
         },
-        include: Event,
+        include: Itinerary,
         exclude: ['id']
       });
-      if (itineraries === null) {
+      if (event === null) {
         throw new Error('event not found');
+      }
+      const itineraries = event.getItineraries();
+      if (itineraries === null) {
+        throw new Error('itineraries not found');
       }
       values = itineraries.map(row => row.dataValues);
     } else {

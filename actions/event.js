@@ -107,7 +107,7 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
   try {
     let values;
     if (payload.organisation) {
-      const organisation = await Organisation.find({ 
+      const organisation = await Organisation.findOne({ 
         where: {
           public_id: payload.organisation 
         },
@@ -117,9 +117,9 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
       if (organisation === null) {
         throw new Error('organisation not found');
       }
-      const events = orgaisation.getEvents();
+      const events = organisation.getEvents();
       if (events === null) {
-        throw new Error('event not found');
+        throw new Error('events not found');
       }
       values = events.map(row => row.dataValues);
     } else {
