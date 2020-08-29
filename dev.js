@@ -1,3 +1,127 @@
 require('dotenv').config();
 const { manage } = require('./index');
-manage();
+let payload, data, event;
+// associate itinerary item
+payload = {
+  domain: 'admin',
+  action: 'item',
+  command: 'create',
+  payload: {
+    itinerary: '0d84ac76-5d00-4969-9312-440900fa6eb3',
+    id: 'VrtZIutGiSghmnmeqXyl'
+  }
+};
+data = Buffer.from(JSON.stringify(payload)).toString('base64');
+event = {
+  data
+};
+manage(event, '', (resp) => {
+  console.log(resp);
+  console.log('executed');
+});
+
+// associate itinerary item
+payload = {
+  domain: 'admin',
+  action: 'itinerary',
+  command: 'read',
+  payload: {
+    id: '0d84ac76-5d00-4969-9312-440900fa6eb3'
+  },
+  user: {
+    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+    username: "tester",
+    fields: {
+      custom: "fields"
+    }
+  }
+};
+data = Buffer.from(JSON.stringify(payload)).toString('base64');
+event = {
+  data
+};
+manage(event, '', (resp) => {
+  console.log(resp);
+  console.log('executed');
+});
+
+// associate itinerary item
+payload = {
+  domain: 'admin',
+  action: 'event',
+  command: 'create',
+  payload: {
+    name: "event-numero-2",
+    website: "www.example.com",
+    start_date: "2020-08-21 08:00:00",
+    end_date: "2020-08-22 17:00:00",
+    organisation: "c3a7a5bf-276a-415e-bf99-53108c277561"
+  },
+  user: {
+    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+    username: "tester",
+    fields: {
+      custom: "fields"
+    }
+  }
+};
+data = Buffer.from(JSON.stringify(payload)).toString('base64');
+event = {
+  data
+};
+
+manage(event, '', (resp) => {
+  console.log(resp);
+  console.log('executed');
+});
+
+// associate itinerary item
+payload = {
+  domain: 'admin',
+  action: 'event',
+  command: 'read',
+  payload: {
+    id: '3b739350-7626-4cf8-8bc7-7fefcc10fce8'
+  },
+  user: {
+    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+    username: "tester",
+    fields: {
+      custom: "fields"
+    }
+  }
+};
+data = Buffer.from(JSON.stringify(payload)).toString('base64');
+event = {
+  data
+};
+manage(event, '', (resp) => {
+  console.log(resp);
+  console.log('executed');
+});
+
+// get events by id
+payload = {
+  domain: 'consumer',
+  action: 'event',
+  command: 'get',
+  payload: {
+    organisation: 'd8ad68bd-9fcc-425e-b6ce-46c1c6ea7473'
+  },
+  user: {
+    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+    username: "tester",
+    fields: {
+      custom: "fields"
+    }
+  }
+};
+data = Buffer.from(JSON.stringify(payload)).toString('base64');
+event = {
+  data
+};
+manage(event, '', (resp) => {
+  console.log(resp);
+  console.log('executed');
+  process.exit();
+});

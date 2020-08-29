@@ -13,8 +13,8 @@ const Organisation = OrganisationModel(sequelize, sequelizeLib);
 const Event = EventModel(sequelize, sequelizeLib);
 const Itinerary = ItineraryModel(sequelize, sequelizeLib);
 module.exports = async () => {
-    if (process.env.NODE_ENV !== 'production') {
-        await sequelize.sync({ force: true });
+    if (process.env.MIGRATE === 'migration') {
+        await sequelize.sync();
         console.log('tables sync complete');
     }
     return {

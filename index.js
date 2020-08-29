@@ -29,7 +29,7 @@ exports.manage = async (event, context, callback) => {
   if (message === null) {
     callback();
   }
-  console.log('message', message);
+  let response;
   switch (message.action) {
     case 'organisation':
       await (async () => {
@@ -38,7 +38,7 @@ exports.manage = async (event, context, callback) => {
           case 'create':
             try {
               console.log('message', message);
-              await create(message);
+              response = await create(message);
             } catch (error) {
               console.log('error in create', error);
             }
@@ -46,7 +46,7 @@ exports.manage = async (event, context, callback) => {
           case 'read':
             try {
               console.log('message', message);
-              await read(message);
+              response = await read(message);
             } catch (error) {
               console.log('error in read', error);
             }
@@ -54,7 +54,7 @@ exports.manage = async (event, context, callback) => {
           case 'update':
             try {
               console.log('message', message);
-              await update(message);
+              response = await update(message);
             } catch (error) {
               console.log('error in update', error);
             }
@@ -62,7 +62,7 @@ exports.manage = async (event, context, callback) => {
           case 'delete':
             try {
               console.log('message', message);
-              await remove(message);
+              response = await remove(message);
             } catch (error) {
               console.log('error in delete', error);
             }
@@ -78,7 +78,7 @@ exports.manage = async (event, context, callback) => {
           case 'create':
             try {
               console.log('message', message);
-              await create(message);
+              response = await create(message);
             } catch (error) {
               console.log('error in create', error);
             }
@@ -86,7 +86,7 @@ exports.manage = async (event, context, callback) => {
           case 'read':
             try {
               console.log('message', message);
-              await read(message);
+              response = await read(message);
             } catch (error) {
               console.log('error in read', error);
             }
@@ -94,7 +94,7 @@ exports.manage = async (event, context, callback) => {
           case 'update':
             try {
               console.log('message', message);
-              await update(message);
+              response = await update(message);
             } catch (error) {
               console.log('error in update', error);
             }
@@ -102,7 +102,7 @@ exports.manage = async (event, context, callback) => {
           case 'delete':
             try {
               console.log('message', message);
-              await remove(message);
+              response = await remove(message);
             } catch (error) {
               console.log('error in delete', error);
             }
@@ -110,7 +110,7 @@ exports.manage = async (event, context, callback) => {
           case 'get':
             try {
               console.log('message', message);
-              await get(message);
+              response = await get(message);
             } catch (error) {
               console.log('error in get', error);
             }
@@ -125,7 +125,7 @@ exports.manage = async (event, context, callback) => {
           case 'create':
             try {
               console.log('message', message);
-              await create(message);
+              response = await create(message);
             } catch (error) {
               console.log('error in create', error);
             }
@@ -133,7 +133,7 @@ exports.manage = async (event, context, callback) => {
           case 'read':
             try {
               console.log('message', message);
-              await read(message);
+              response = await read(message);
             } catch (error) {
               console.log('error in read', error);
             }
@@ -141,7 +141,7 @@ exports.manage = async (event, context, callback) => {
           case 'update':
             try {
               console.log('message', message);
-              await update(message);
+              response = await update(message);
             } catch (error) {
               console.log('error in update', error);
             }
@@ -149,7 +149,7 @@ exports.manage = async (event, context, callback) => {
           case 'delete':
             try {
               console.log('message', message);
-              await remove(message);
+              response = await remove(message);
             } catch (error) {
               console.log('error in delete', error);
             }
@@ -157,7 +157,7 @@ exports.manage = async (event, context, callback) => {
           case 'get':
             try {
               console.log('message', message);
-              await get(message);
+              response = await get(message);
             } catch (error) {
               console.log('error in get', error);
             }
@@ -172,7 +172,7 @@ exports.manage = async (event, context, callback) => {
             case 'create':
               try {
                 console.log('message', message);
-                await assign(message);
+                response = await assign(message);
               } catch (error) {
                 console.log('error in assigning', error);
               }
@@ -180,7 +180,7 @@ exports.manage = async (event, context, callback) => {
             case 'delete':
               try {
                 console.log('message', message);
-                await unassign(message);
+                response = await unassign(message);
               } catch (error) {
                 console.log('error in unassigning', error);
               }
@@ -188,7 +188,7 @@ exports.manage = async (event, context, callback) => {
             case 'get':
               try {
                 console.log('message', message);
-                await get(message);
+                response = await get(message);
               } catch (error) {
                 console.log('error in get', error);
               }
@@ -203,7 +203,7 @@ exports.manage = async (event, context, callback) => {
           case 'create':
             try {
               console.log('message', message);
-              await create(message);
+              response = await create(message);
             } catch (error) {
               console.log('error in create', error);
             }
@@ -211,7 +211,7 @@ exports.manage = async (event, context, callback) => {
           case 'read':
             try {
               console.log('message', message);
-              await read(message);
+              response = await read(message);
             } catch (error) {
               console.log('error in read', error);
             }
@@ -219,7 +219,7 @@ exports.manage = async (event, context, callback) => {
           case 'update':
             try {
               console.log('message', message);
-              await update(message);
+              response = await update(message);
             } catch (error) {
               console.log('error in update', error);
             }
@@ -227,7 +227,7 @@ exports.manage = async (event, context, callback) => {
           case 'delete':
             try {
               console.log('message', message);
-              await remove(message);
+              response = await remove(message);
             } catch (error) {
               console.log('error in delete', error);
             }
@@ -235,7 +235,7 @@ exports.manage = async (event, context, callback) => {
           case 'get':
             try {
               console.log('message', message);
-              await get(message);
+              response = await get(message);
             } catch (error) {
               console.log('error in get', error);
             }
@@ -244,5 +244,9 @@ exports.manage = async (event, context, callback) => {
       })();
       break;
   }
-  callback();
+  if (process.env.NODE_ENV !== 'production') {
+    callback(response);
+  } else {
+    callback();
+  }
 };

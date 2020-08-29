@@ -17,6 +17,9 @@ module.exports = (injectedOrganisation, injectedEvent, injectedItinerary, inject
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
     const event = await Event.create({ ...payload, added_by: user.id });
+    if (process.env.NODE_ENV !== 'production') {
+      return { ...payload, public_id: event.public_id };
+    }
     await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: event.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
@@ -35,7 +38,9 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
     if (event === null) {
       throw new Error('event not found');
     }
-    console.log(event.dataValues);
+    if (process.env.NODE_ENV !== 'production') {
+      return event.dataValues;
+    }
     await publish('ex-gateway', { domain, action, command, payload: event.dataValues, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -57,7 +62,9 @@ const update = async ({ domain, action, command, socketId, payload, user }) => {
       event[field] = payload[field];
     }
     await event.save();
-    console.log(event.dataValues);
+    if (process.env.NODE_ENV !== 'production') {
+      return event.dataValues;
+    }
     await publish('ex-gateway', { domain, action, command, payload: event.dataValues, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -75,6 +82,9 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
       throw new Error('event not found');
     }
     await event.destroy();
+    if (process.env.NODE_ENV !== 'production') {
+      return payload;
+    }
     await publish('ex-gateway', { domain, action, command, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -107,6 +117,9 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
         throw new Error('event not found');
       }
       values = event.dataValues;
+    }
+    if (process.env.NODE_ENV !== 'production') {
+      return values;
     }
     await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {

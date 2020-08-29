@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node dev.js",
+    "migrate": "MIGRATE=migration node dev.js",
     "test": "node test.js"
   },
   "keywords": [],

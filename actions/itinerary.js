@@ -18,6 +18,9 @@ module.exports = (injectedEvent, injectedItinerary, injectedPublish, injectedAxi
 const create = async ({domain, action, command, socketId, payload, user}) => {
   try {
     const itinerary = await Itinerary.create({ ...payload, added_by: user.id });
+    if (process.env.NODE_ENV !== 'production') {
+      return itinerary;
+    }
     await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
@@ -35,6 +38,10 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
     });
     if (itinerary === null) {
       throw new Error('itinerary not found');
+    }
+    itinerary.dataValues.items = JSON.parse(itinerary.dataValues.items);
+    if (process.env.NODE_ENV !== 'production') {
+      return itinerary.dataValues;
     }
     await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
@@ -57,7 +64,9 @@ const update = async ({ domain, action, command, socketId, payload, user }) => {
       itinerary[field] = payload[field];
     }
     await itinerary.save();
-    console.log(itinerary.dataValues);
+    if (process.env.NODE_ENV !== 'production') {
+      return itinerary.dataValues;
+    }
     await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -75,6 +84,9 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
       throw new Error('itinerary not found');
     }
     await itinerary.destroy();
+    if (process.env.NODE_ENV !== 'production') {
+      return payload;
+    }
     await publish('ex-gateway', { domain, action, command, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -107,6 +119,9 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
       }
       values = itinerary.dataValues;
     }
+    if (process.env.NODE_ENV !== 'production') {
+      return values;
+    }
     await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
   } catch (error) {
     await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
@@ -119,10 +134,17 @@ const assign = async ({domain, action, command, socketId, payload, user}) => {
         public_id: payload.itinerary
       }
     });
-    const items = itinerary.items || [];
+    if (!itinerary) {
+      throw new Error('itinerary not found');
+    }
+    const items = JSON.parse(itinerary.items) || [];
     items.push(payload.id);
-    itinerary.items = items;
+    console.log(items);
+    itinerary.items = JSON.stringify(items);
     await itinerary.save();
+    if (process.env.NODE_ENV !== 'production') {
+      return itinerary;
+    }
   } catch (error) {
     console.log('error in insert', error);
     throw error;
@@ -135,11 +157,17 @@ const unassign = async ({domain, action, command, socketId, payload, user}) => {
         public_id: payload.itinerary
       }
     });
-    const items = itinerary.items;
+    if (!itinerary) {
+      throw new Error('itinerary not found');
+    }
+    const items = JSON.parse(itinerary.items) || [];
     const ind = items.indexOf(payload.id);
     items.splice(ind, 1);
-    itinerary.items = items;
+    itinerary.items = JSON.stringify(items);
     await itinerary.save();
+    if (process.env.NODE_ENV !== 'production') {
+      return itinerary;
+    }
   } catch (error) {
     console.log('error in insert', error);
     throw error;

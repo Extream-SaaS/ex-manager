@@ -23,13 +23,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         end_date: {
             type: DataTypes.DATE
         },
-        organisation: {
-            type: DataTypes.UUID,
-            references: {
-                model: Organisation,
-                key: 'public_id'
-            }
-        },
         parent: {
             type: DataTypes.UUID,
             references: {
@@ -51,5 +44,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Event'
     });
+    Organisation.hasMany(Event, { foreignKey: 'public_id' });
     return Event;
 };
