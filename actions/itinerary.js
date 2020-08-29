@@ -114,7 +114,11 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
 };
 const assign = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const itinerary = await Itinerary.findOne(payload.itinerary);
+    const itinerary = await Itinerary.findOne({
+      where: {
+        public_id: payload.itinerary
+      }
+    });
     const items = itinerary.items;
     items.push(payload.id);
     itinerary.items = items;
@@ -126,7 +130,11 @@ const assign = async ({domain, action, command, socketId, payload, user}) => {
 };
 const unassign = async ({domain, action, command, socketId, payload, user}) => {
   try {
-    const itinerary = await Itinerary.findOne(payload.itinerary);
+    const itinerary = await Itinerary.findOne({
+      where: {
+        public_id: payload.itinerary
+      }
+    });
     const items = itinerary.items;
     const ind = items.indexOf(payload.id);
     items.splice(ind, 1);
