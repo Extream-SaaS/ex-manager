@@ -24,14 +24,14 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
     }
     console.log('user', user);
     const organisation = await Organisation.create({ ...payload, createdBy: user.id });
-    await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: organisation.public_id }, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: { ...payload, public_id: organisation.public_id }, user, socketId });
   } catch (error) {
     console.log('error in insert', error);
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
     throw error;
   }
 };
-const read = async ({ domain, action, command, socketId, payload, user }) => {
+const read = async ({ source, domain, action, command, socketId, payload, user }) => {
   try {
     console.log('reading');
     const organisation = await Organisation.findOne({ 
@@ -44,13 +44,13 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
       throw new Error('organisation not found');
     }
     console.log(organisation.dataValues);
-    await publish('ex-gateway', { domain, action, command, payload: organisation.dataValues, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: organisation.dataValues, user, socketId });
   } catch (error) {
     console.log('publishing error', error);
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
-const update = async ({ domain, action, command, socketId, payload, user }) => {
+const update = async ({ source, domain, action, command, socketId, payload, user }) => {
   console.log('data', payload, user);
   try {
     const organisation = await Organisation.findOne({ 
@@ -67,12 +67,12 @@ const update = async ({ domain, action, command, socketId, payload, user }) => {
     }
     await organisation.save();
     console.log(organisation.dataValues);
-    await publish('ex-gateway', { domain, action, command, payload: organisation.dataValues, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: organisation.dataValues, user, socketId });
   } catch (error) {
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
-const remove = async ({ domain, action, command, socketId, payload, user }) => {
+const remove = async ({ source, domain, action, command, socketId, payload, user }) => {
   console.log('data', payload, user);
   try {
     const organisation = await Organisation.findOne({ 
@@ -84,8 +84,8 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
       throw new Error('organisation not found');
     }
     await organisation.destroy();
-    await publish('ex-gateway', { domain, action, command, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, user, socketId });
   } catch (error) {
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };

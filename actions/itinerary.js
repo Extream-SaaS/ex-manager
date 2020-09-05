@@ -30,17 +30,17 @@ const create = async ({domain, action, command, socketId, payload, user}) => {
       if (process.env.NODE_ENV !== 'production') {
         return itinerary;
       }
-      await publish('ex-gateway', { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
+      await publish('ex-gateway', source, { domain, action, command, payload: { ...payload, public_id: itinerary.public_id }, user, socketId });
     } else {
       throw new Error('event is required');
     }
   } catch (error) {
     console.log('error in insert', error);
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
     throw error;
   }
 };
-const read = async ({ domain, action, command, socketId, payload, user }) => {
+const read = async ({ source, domain, action, command, socketId, payload, user }) => {
   try {
     const itinerary = await Itinerary.findOne({ 
       where: {
@@ -55,12 +55,12 @@ const read = async ({ domain, action, command, socketId, payload, user }) => {
     if (process.env.NODE_ENV !== 'production') {
       return itinerary.dataValues;
     }
-    await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
-const update = async ({ domain, action, command, socketId, payload, user }) => {
+const update = async ({ source, domain, action, command, socketId, payload, user }) => {
   console.log('data', payload, user);
   try {
     const itinerary = await Itinerary.findOne({ 
@@ -79,12 +79,12 @@ const update = async ({ domain, action, command, socketId, payload, user }) => {
     if (process.env.NODE_ENV !== 'production') {
       return itinerary.dataValues;
     }
-    await publish('ex-gateway', { domain, action, command, payload: itinerary.dataValues, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
-const remove = async ({ domain, action, command, socketId, payload, user }) => {
+const remove = async ({ source, domain, action, command, socketId, payload, user }) => {
   console.log('data', payload, user);
   try {
     const itinerary = await Itinerary.findOne({ 
@@ -99,12 +99,12 @@ const remove = async ({ domain, action, command, socketId, payload, user }) => {
     if (process.env.NODE_ENV !== 'production') {
       return payload;
     }
-    await publish('ex-gateway', { domain, action, command, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, user, socketId });
   } catch (error) {
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
-const get = async ({ domain, action, command, socketId, payload, user }) => {
+const get = async ({ source, domain, action, command, socketId, payload, user }) => {
   try {
     let values;
     if (payload.event) {
@@ -138,12 +138,12 @@ const get = async ({ domain, action, command, socketId, payload, user }) => {
     if (process.env.NODE_ENV !== 'production') {
       return values;
     }
-    await publish('ex-gateway', { domain, action, command, payload: values, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: values, user, socketId });
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
       throw error;
     }
-    await publish('ex-gateway', { error: error.message, domain, action, command, payload, user, socketId });
+    await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
 const assign = async ({domain, action, command, socketId, payload, user}) => {
