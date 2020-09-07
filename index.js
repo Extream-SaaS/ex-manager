@@ -1,17 +1,18 @@
 const projectId = 'stoked-reality-284921';
 const publish = (
-  topicName = 'ex-gateway',
-  source = 'app-engine',
-  data = {}
+  topicName,
+  source,
+  data
 ) => {
   const {PubSub} = require('@google-cloud/pubsub');
   // Instantiates a client
   const pubsub = new PubSub({projectId});
 
   async function publishMessage() {
-    const dataBuffer = Buffer.from(JSON.stringify(data));
+    const sourceStr = data ? `-${source}` : '';
+    const dataBuffer = Buffer.from(JSON.stringify(!data ? source : data));
 
-    const messageId = await pubsub.topic(`${topicName}-${source}`).publish(dataBuffer);
+    const messageId = await pubsub.topic(`${topicName}${sourceStr}`).publish(dataBuffer);
     return messageId;
   }
 
