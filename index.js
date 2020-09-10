@@ -169,7 +169,7 @@ exports.manage = async (event, context, callback) => {
       break;
       case 'item':
         await (async () => {
-          const { assign, unassign } = require('./actions/itinerary')(Event, Itinerary, publish, axios);
+          const { assign, unassign, get } = require('./actions/itinerary')(Event, Itinerary, publish, axios);
           switch (message.command) {
             case 'create':
               try {
