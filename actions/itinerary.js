@@ -15,7 +15,7 @@ module.exports = (injectedEvent, injectedItinerary, injectedPublish, injectedAxi
     unassign
   };
 };
-const create = async ({domain, action, command, socketId, payload, user}) => {
+const create = async ({source, domain, action, command, socketId, payload, user }) => {
   try {
     if (payload.event) {
       const event = await Event.findOne({
@@ -146,7 +146,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
     await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };
-const assign = async ({domain, action, command, socketId, payload, user}) => {
+const assign = async ({ source, domain, action, command, socketId, payload, user}) => {
   try {
     const itinerary = await Itinerary.findOne({
       where: {
@@ -171,7 +171,7 @@ const assign = async ({domain, action, command, socketId, payload, user}) => {
     throw error;
   }
 };
-const unassign = async ({domain, action, command, socketId, payload, user}) => {
+const unassign = async ({ source, domain, action, command, socketId, payload, user}) => {
   try {
     const itinerary = await Itinerary.findOne({
       where: {

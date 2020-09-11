@@ -14,7 +14,7 @@ module.exports = (injectedOrganisation, injectedEvent, injectedItinerary, inject
     get
   };
 };
-const create = async ({domain, action, command, socketId, payload, user}) => {
+const create = async ({source, domain, action, command, socketId, payload, user}) => {
   try {
     if (payload.organisation) {
       const organisation = await Organisation.findOne({
