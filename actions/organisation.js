@@ -11,7 +11,7 @@ module.exports = (injectedOrganisation, injectedPublish, injectedAxios) => {
     remove
   };
 };
-const create = async ({domain, action, command, socketId, payload, user}) => {
+const create = async ({source, domain, action, command, socketId, payload, user}) => {
   try {
     if (payload.primary_contact) {
       if (!payload.primary_contact.id) {
