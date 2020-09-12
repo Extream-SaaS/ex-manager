@@ -42,7 +42,7 @@ jobs:
   deploy:
     name: Deploy ex-manager - Cloud Function
     runs-on: ubuntu-latest
-    needs: [buildManageStreamer]
+    needs: [build]
     steps:
       - uses: actions/checkout@v2
 
