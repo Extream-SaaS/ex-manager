@@ -162,6 +162,7 @@ const assign = async ({ source, domain, action, command, socketId, payload, user
       id: payload.id
     });
     itinerary.items = JSON.stringify(items);
+    console.log('pushing items', itinerary.items);
     await itinerary.save();
     if (process.env.NODE_ENV !== 'production') {
       return itinerary;
