@@ -157,8 +157,10 @@ const assign = async ({ source, domain, action, command, socketId, payload, user
       throw new Error('itinerary not found');
     }
     const items = JSON.parse(itinerary.items) || [];
-    items.push(payload.id);
-    console.log(items);
+    items.push({
+      type: action,
+      id: payload.id
+    });
     itinerary.items = JSON.stringify(items);
     await itinerary.save();
     if (process.env.NODE_ENV !== 'production') {
