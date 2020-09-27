@@ -158,8 +158,8 @@ const assign = async ({ source, domain, action, command, socketId, payload, user
     }
     const items = JSON.parse(itinerary.items) || [];
     items.push({
-      type: action,
-      id: payload.id
+      type: payload.type,
+      id: payload.id,
     });
     itinerary.items = JSON.stringify(items);
     console.log('pushing items', itinerary.items);
