@@ -29,7 +29,6 @@ exports.manage = async (event, context, callback) => {
   const { sequelize, Page, Organisation, Event, Itinerary } = await require("./db")();
   const message = event && event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
-    sequelize.close();
     callback();
   }
   let response;
@@ -248,7 +247,6 @@ exports.manage = async (event, context, callback) => {
       break;
   }
   console.log('execution completed');
-  sequelize.close();
   if (process.env.NODE_ENV !== 'production') {
     callback(response);
   } else {

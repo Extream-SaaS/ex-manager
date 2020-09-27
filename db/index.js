@@ -6,7 +6,13 @@ const ItineraryModel = require("./models/itinerary");
 const dbSocketPath = process.env.DB_SOCKET_PATH || "/cloudsql";
 const sequelize = new sequelizeLib.Sequelize(process.env.CLOUD_SQL_DATABASE, process.env.CLOUD_SQL_USERNAME, process.env.CLOUD_SQL_PASSWORD, {
     dialect: 'postgres',
-    host: `${dbSocketPath}/${process.env.CLOUD_SQL_INSTANCE}`
+    host: `${dbSocketPath}/${process.env.CLOUD_SQL_INSTANCE}`,
+    pool: {
+        max: 1,
+        min: 0,
+        acquire: 3000,
+        idle: 1000
+    }
 });
 const Page = PageModel(sequelize, sequelizeLib);
 const Organisation = OrganisationModel(sequelize, sequelizeLib);
