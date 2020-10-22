@@ -7,7 +7,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
     Notice.init({
         public_id: {
             type: DataTypes.UUID,
-            defaultValue: Sequelize.UUIDV4,
             unique: true
         },
         message: {
