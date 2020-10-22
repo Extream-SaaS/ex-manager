@@ -25,12 +25,12 @@ const send = async ({source, domain, action, command, socketId, payload, user}) 
         throw new Error('event not found');
       }
       // const newNotice = await event.createNotice({ message: JSON.stringify(payload.message), createdBy: user.id });
-      const newNotice = await Notice.create({ public_id: payload.public_id, event: payload.event, message: JSON.stringify(payload.message), createdBy: user.id });
+      const newNotice = await Notice.create({ event: payload.event, message: JSON.stringify(payload.message), createdBy: user.id });
       if (process.env.NODE_ENV !== 'production') {
-        console.log({ ...payload });
-        return { ...payload };
+        console.log({ ...payload, public_id: newNotice.public_id });
+        return { ...payload, public_id: newNotice.public_id };
       }
-      await publish('ex-gateway', source, { domain, action, command, payload: { ...payload }, user, socketId });
+      await publish('ex-gateway', source, { domain, action, command, payload: { ...payload, public_id: newNotice.public_id }, user, socketId });
     } else {
       throw new Error('event is required');
     }
@@ -108,6 +108,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
     if (process.env.NODE_ENV !== 'production') {
       return values;
     }
+    console.log('values', values);
     await publish('ex-gateway', source, { domain, action, command, payload: values, user, socketId });
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
