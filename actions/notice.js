@@ -95,6 +95,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
         const readStatus = await UserNotice.findOne({
           where: {
             notice: notice.public_id,
+            user_id: user.id,
           },
         });
         if (readStatus === null || readStatus.dataValues.status !== 'read') {

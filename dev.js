@@ -123,28 +123,28 @@ payload = {
   },
   socketId: 'h-LgfwquwW1XUDsuAAAB'
 };
-// payload = {
-//   domain: 'client',
-//   action: 'notice',
-//   command: 'get',
-//   payload: { event: '0bd12619-7f63-414c-8907-30b59aeb9380'},
-//   user: {
-//     id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
-//     username: 'richard@zest4.tv',
-//     email: 'richard@zest4.tv',
-//     fields: {
-//       firstName: 'Rich',
-//       lastName: 'Wilson',
-//       company: 'Zest',
-//       region: 'UK',
-//       displayName: 'Rich - Crew'
-//     },
-//     user_type: 'chief',
-//     eventId: '0bd12619-7f63-414c-8907-30b59aeb9380',
-//     token: '57eb3bf9c362645229c6099a22292fb851cc0863'
-//   },
-//   socketId: 'h-LgfwquwW1XUDsuAAAB'
-// };
+payload = {
+  domain: 'client',
+  action: 'notice',
+  command: 'get',
+  payload: { event: '0bd12619-7f63-414c-8907-30b59aeb9380'},
+  user: {
+    id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
+    username: 'richard@zest4.tv',
+    email: 'richard@zest4.tv',
+    fields: {
+      firstName: 'Rich',
+      lastName: 'Wilson',
+      company: 'Zest',
+      region: 'UK',
+      displayName: 'Rich - Crew'
+    },
+    user_type: 'chief',
+    eventId: '0bd12619-7f63-414c-8907-30b59aeb9380',
+    token: '57eb3bf9c362645229c6099a22292fb851cc0863'
+  },
+  socketId: 'h-LgfwquwW1XUDsuAAAB'
+};
 // payload = {
 //   domain: 'consumer',
 //   action: 'notice',
