@@ -30,8 +30,8 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Event'
     });
-    Event.belongsTo(Event, { targetKey: 'public_id', foreignKey: 'parent' });
-    Event.hasMany(Event, { sourceKey: 'parent', foreignKey: 'public_id' });
+    // Event.belongsTo(Event, { targetKey: 'public_id', foreignKey: 'parent' });
+    Event.hasMany(Event, { sourceKey: 'public_id', foreignKey: 'parent' });
     Event.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'landing_page' });
     Event.hasMany(Itinerary, { sourceKey: 'public_id', foreignKey: 'event' });
     Itinerary.belongsTo(Event, { targetKey: 'public_id', foreignKey: 'event' });

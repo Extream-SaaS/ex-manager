@@ -26,7 +26,7 @@ const publish = (
  */
 exports.manage = async (event, context, callback) => {
   const axios = require("axios");
-  const { sequelize, Page, Organisation, Event, Itinerary } = await require("./db")();
+  const { sequelize, Page, Organisation, Event, Itinerary, Notice, UserNotice } = await require("./db")();
   const message = event && event.data ? JSON.parse(Buffer.from(event.data, 'base64').toString()) : null;
   if (message === null) {
     callback();
@@ -67,6 +67,40 @@ exports.manage = async (event, context, callback) => {
               response = await remove(message);
             } catch (error) {
               console.log('error in delete', error);
+            }
+            break;
+        }
+      })();
+      break;
+    case 'notice':
+      await (async () => {
+        console.log(message.action);
+        const { send, read, get } = require('./actions/notice')(Event, Page, Notice, UserNotice, publish, axios);
+        switch (message.command) {
+          case 'send':
+            try {
+              console.log('message', message);
+              response = await send(message);
+            } catch (error) {
+              console.log('error in send', error);
+            }
+            break;
+          case 'read':
+            try {
+              // mark a notice as read by a user
+              console.log('message', message);
+              response = await read(message);
+            } catch (error) {
+              console.log('error in read', error);
+            }
+            break;
+          case 'get':
+            try {
+              // get a list of notices for a given user - pass an option if wanting all read ones as well as unread
+              console.log('message', message);
+              response = await get(message);
+            } catch (error) {
+              console.log('error in get', error);
             }
             break;
         }
