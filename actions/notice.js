@@ -90,7 +90,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
       if (notices === null) {
         throw new Error('no notices found for event');
       }
-      values = Promise.all(notices.map(async row => {
+      values = await Promise.all(notices.map(async row => {
         const notice = row.dataValues;
         const readStatus = await UserNotice.findOne({
           where: {
@@ -106,10 +106,9 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
       }));
     }
     if (process.env.NODE_ENV !== 'production') {
-      return values;
+      return values.filter(Boolean);
     }
-    console.log('values', values);
-    await publish('ex-gateway', source, { domain, action, command, payload: values, user, socketId });
+    await publish('ex-gateway', source, { domain, action, command, payload: values.filter(Boolean), user, socketId });
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
       throw error;
