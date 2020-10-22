@@ -101,11 +101,24 @@ let payload, data, event;
 // });
 
 // get events by id
+// payload = {
+//   domain: 'client',
+//   action: 'notice',
+//   command: 'send',
+//   payload: { event: '0bd12619-7f63-414c-8907-30b59aeb9380', message: { text: 'new message' } },
+//   user: {
+//     id: '091e8b52-8506-4512-b75e-149ee51c4f04',
+//     username: 'tester',
+//     fields: { custom: 'fields' },
+//     token: 'e7c070e8d69b28093154bb7c4ca7602af8bd1cd4'
+//   },
+//   socketId: 'XbTiLsd9CmFwzEafAAAA'
+// };
 payload = {
-  domain: 'consumer',
-  action: 'event',
+  domain: 'client',
+  action: 'notice',
   command: 'get',
-  payload: { organisation: 'd8ad68bd-9fcc-425e-b6ce-46c1c6ea7473' },
+  payload: { event: '0bd12619-7f63-414c-8907-30b59aeb9380'},
   user: {
     id: '091e8b52-8506-4512-b75e-149ee51c4f04',
     username: 'tester',
@@ -114,6 +127,19 @@ payload = {
   },
   socketId: 'XbTiLsd9CmFwzEafAAAA'
 };
+// payload = {
+//   domain: 'consumer',
+//   action: 'notice',
+//   command: 'read',
+//   payload: { message: '1d088269-bb72-4314-aee7-386932f48967'},
+//   user: {
+//     id: '091e8b52-8506-4512-b75e-149ee51c4f04',
+//     username: 'tester',
+//     fields: { custom: 'fields' },
+//     token: 'e7c070e8d69b28093154bb7c4ca7602af8bd1cd4'
+//   },
+//   socketId: 'XbTiLsd9CmFwzEafAAAA'
+// };
 data = Buffer.from(JSON.stringify(payload)).toString('base64');
 event = {
   data
