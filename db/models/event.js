@@ -1,5 +1,6 @@
 module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
     const Itinerary = require('./itinerary')(sequelize, { Sequelize, Model, DataTypes });
+    const Organisation = require('./organisation')(sequelize, { Sequelize, Model, DataTypes });
     const Page = require('./page')(sequelize, { Sequelize, Model, DataTypes });
     class Event extends Model {}
 
@@ -30,7 +31,8 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Event'
     });
-    // Event.belongsTo(Event, { targetKey: 'public_id', foreignKey: 'parent' });
+    Organisation.hasMany(Event, { sourceKey: 'public_id', foreignKey: 'organisation' });
+    Event.belongsTo(Organisation, { targetKey: 'public_id', foreignKey: 'organisation' });
     Event.hasMany(Event, { sourceKey: 'public_id', foreignKey: 'parent' });
     Event.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'landing_page' });
     Event.hasMany(Itinerary, { sourceKey: 'public_id', foreignKey: 'event' });
