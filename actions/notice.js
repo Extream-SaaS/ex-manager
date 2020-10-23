@@ -53,9 +53,12 @@ const read = async ({ source, domain, action, command, socketId, payload, user }
       throw new Error('notice not found');
     }
     let userNotice = await UserNotice.findOne({
-      user_id: user.id,
-      notice: payload.message,
+      where: {
+        user_id: user.id,
+        notice: payload.message,
+      },
     });
+    console.log('user notice', userNotice);
     if (userNotice === null) {
       userNotice = await UserNotice.create({
         notice: payload.message,
@@ -98,8 +101,19 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
             user_id: user.id,
           },
         });
-        if (readStatus === null || readStatus.dataValues.status !== 'read') {
+        console.log({
+          notice: notice.public_id,
+          user_id: user.id,
+        });
+        if (readStatus) {
+          console.log('status', readStatus.dataValues);
+        }
+        if ((payload.read && payload.read === true) || readStatus === null || readStatus.dataValues.status !== 'read') {
           notice.message = JSON.parse(notice.message);
+          notice.status = 'unread';
+          if (readStatus !== null) {
+            notice.status = readStatus.dataValues.status;
+          }
           return notice;
         } else {
           return null;

@@ -101,28 +101,28 @@ let payload, data, event;
 // });
 
 // get events by id
-payload = {
-  domain: 'client',
-  action: 'notice',
-  command: 'send',
-  payload: { public_id: 'c1d218f0-7b8c-483f-9006-b4b5bfc6a0a7', event: '0bd12619-7f63-414c-8907-30b59aeb9380', message: { text: 'new message' } },
-  user: {
-    id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
-    username: 'richard@zest4.tv',
-    email: 'richard@zest4.tv',
-    fields: {
-      firstName: 'Rich',
-      lastName: 'Wilson',
-      company: 'Zest',
-      region: 'UK',
-      displayName: 'Rich - Crew'
-    },
-    user_type: 'chief',
-    eventId: '0bd12619-7f63-414c-8907-30b59aeb9380',
-    token: '57eb3bf9c362645229c6099a22292fb851cc0863'
-  },
-  socketId: 'h-LgfwquwW1XUDsuAAAB'
-};
+// payload = {
+//   domain: 'client',
+//   action: 'notice',
+//   command: 'send',
+//   payload: { public_id: 'c1d218f0-7b8c-483f-9006-b4b5bfc6a0a7', event: '0bd12619-7f63-414c-8907-30b59aeb9380', message: { text: 'new message' } },
+//   user: {
+//     id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
+//     username: 'richard@zest4.tv',
+//     email: 'richard@zest4.tv',
+//     fields: {
+//       firstName: 'Rich',
+//       lastName: 'Wilson',
+//       company: 'Zest',
+//       region: 'UK',
+//       displayName: 'Rich - Crew'
+//     },
+//     user_type: 'chief',
+//     eventId: '0bd12619-7f63-414c-8907-30b59aeb9380',
+//     token: '57eb3bf9c362645229c6099a22292fb851cc0863'
+//   },
+//   socketId: 'h-LgfwquwW1XUDsuAAAB'
+// };
 payload = {
   domain: 'client',
   action: 'notice',
@@ -149,9 +149,9 @@ payload = {
 //   domain: 'consumer',
 //   action: 'notice',
 //   command: 'read',
-//   payload: { message: '1d088269-bb72-4314-aee7-386932f48967'},
+//   payload: { message: '996878a9-b6ca-44ef-9dba-36ec372c94dd'},
 //   user: {
-//     id: '091e8b52-8506-4512-b75e-149ee51c4f04',
+//     id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
 //     username: 'tester',
 //     fields: { custom: 'fields' },
 //     token: 'e7c070e8d69b28093154bb7c4ca7602af8bd1cd4'
