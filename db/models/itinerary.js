@@ -33,5 +33,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         modelName: 'Itinerary'
     });
     Itinerary.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'landing_page' });
+    Itinerary.hasMany(Itinerary, { sourceKey: 'public_id', foreignKey: 'parent' });
     return Itinerary;
 };

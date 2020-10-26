@@ -123,6 +123,17 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
         throw new Error('itineraries not found');
       }
       values = itineraries.map(row => row.dataValues);
+    } else if (payload.parent) {
+      const itineraries = await Itinerary.findAll({ 
+        where: {
+          parent: payload.parent 
+        },
+        exclude: ['id']
+      });
+      if (itineraries === null) {
+        throw new Error('no itineraries found');
+      }
+      values = itineraries.map(row => row.dataValues);
     } else {
       const itinerary = await Itinerary.findOne({ 
         where: {
