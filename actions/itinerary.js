@@ -52,6 +52,7 @@ const read = async ({ source, domain, action, command, socketId, payload, user }
       throw new Error('itinerary not found');
     }
     itinerary.dataValues.items = JSON.parse(itinerary.dataValues.items);
+    itinerary.dataValues.meta = JSON.parse(itinerary.dataValues.meta || '{}');
     if (process.env.NODE_ENV !== 'production') {
       return itinerary.dataValues;
     }

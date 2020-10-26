@@ -16,18 +16,22 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
             type: DataTypes.STRING,
             allowNull: true
         },
+        meta: {
+            type: DataTypes.JSONB,
+            allowNull: true
+        },
         start_date: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
         },
         end_date: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
         },
         items: {
-            type: DataTypes.JSONB
+            type: DataTypes.JSONB,
         },
         createdBy: {
-            type: DataTypes.UUID
-        }
+            type: DataTypes.UUID,
+        },
     }, {
         sequelize,
         modelName: 'Itinerary'
