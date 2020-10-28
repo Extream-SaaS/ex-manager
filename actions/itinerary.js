@@ -111,7 +111,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
     if (payload.event) {
       const event = await Event.findOne({ 
         where: {
-          public_id: payload.event 
+          public_id: payload.event,
         },
         include: Itinerary,
         exclude: ['id']
@@ -127,7 +127,8 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
     } else if (payload.parent) {
       const itineraries = await Itinerary.findAll({ 
         where: {
-          parent: payload.parent 
+          parent: payload.parent,
+          status: payload.status,
         },
         exclude: ['id']
       });
@@ -138,7 +139,8 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
     } else {
       const itinerary = await Itinerary.findOne({ 
         where: {
-          public_id: payload.id 
+          public_id: payload.id,
+          status: payload.status,
         },
         exclude: ['id']
       });

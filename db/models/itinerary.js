@@ -14,7 +14,7 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         },
         website: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         meta: {
             type: DataTypes.JSONB,
@@ -28,6 +28,10 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         },
         items: {
             type: DataTypes.JSONB,
+        },
+        status: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         createdBy: {
             type: DataTypes.UUID,
