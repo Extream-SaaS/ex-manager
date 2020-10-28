@@ -108,6 +108,12 @@ const remove = async ({ source, domain, action, command, socketId, payload, user
 const get = async ({ source, domain, action, command, socketId, payload, user }) => {
   try {
     let values;
+    const where = {
+      parent: payload.parent,
+    };
+    if (payload.status) {
+      where.status = payload.status;
+    }
     if (payload.event) {
       const event = await Event.findOne({ 
         where: {
@@ -126,10 +132,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
       values = itineraries.map(row => row.dataValues);
     } else if (payload.parent) {
       const itineraries = await Itinerary.findAll({ 
-        where: {
-          parent: payload.parent,
-          status: payload.status,
-        },
+        where,
         exclude: ['id']
       });
       if (itineraries === null) {
@@ -138,10 +141,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
       values = itineraries.map(row => row.dataValues);
     } else {
       const itinerary = await Itinerary.findOne({ 
-        where: {
-          public_id: payload.id,
-          status: payload.status,
-        },
+        where,
         exclude: ['id']
       });
       if (itinerary === null) {
