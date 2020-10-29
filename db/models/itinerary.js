@@ -1,7 +1,11 @@
-module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
-    const Page = require('./page')(sequelize, { Sequelize, Model, DataTypes });
-    const Event = require('./event')(sequelize, { Sequelize, Model, DataTypes });
-    class Itinerary extends Model {};
+module.exports = (sequelize, {Sequelize, Model, DataTypes}) => {
+    class Itinerary extends Model {
+        static associate(models) {
+            models.Itinerary.belongsTo(models.Page, {targetKey: 'public_id', foreignKey: 'landing_page'});
+            models.Itinerary.hasMany(models.Itinerary, {sourceKey: 'public_id', foreignKey: 'parent'});
+            models.Itinerary.belongsTo(models.Event, {targetKey: 'public_id', foreignKey: 'event'});
+        }
+    }
 
     Itinerary.init({
         public_id: {
@@ -41,9 +45,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Itinerary'
     });
-    Itinerary.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'landing_page' });
-    Itinerary.hasMany(Itinerary, { sourceKey: 'public_id', foreignKey: 'parent' });
-    Event.hasMany(Itinerary, { sourceKey: 'public_id', foreignKey: 'event' });
-    Itinerary.belongsTo(Event, { targetKey: 'public_id', foreignKey: 'event' });
+
     return Itinerary;
 };

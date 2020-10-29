@@ -1,8 +1,12 @@
-module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
-    const Itinerary = require('./itinerary')(sequelize, { Sequelize, Model, DataTypes });
-    const Page = require('./page')(sequelize, { Sequelize, Model, DataTypes });
-    const Event = require('./event')(sequelize, { Sequelize, Model, DataTypes });
-    class Notice extends Model {}
+module.exports = (sequelize, {Sequelize, Model, DataTypes}) => {
+    class Notice extends Model {
+        static associate(models) {
+            models.Notice.belongsTo(models.Page, {targetKey: 'public_id', foreignKey: 'page'});
+            models.Notice.belongsTo(models.Itinerary, {targetKey: 'public_id', foreignKey: 'itinerary'});
+            models.Notice.belongsTo(models.Event, {targetKey: 'public_id', foreignKey: 'event'});
+            models.Notice.hasMany(models.UserNotice, {sourceKey: 'public_id', foreignKey: 'notice'});
+        }
+    }
 
     Notice.init({
         public_id: {
@@ -20,8 +24,5 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Notice'
     });
-    Notice.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'page' });
-    Notice.belongsTo(Itinerary, { targetKey: 'public_id', foreignKey: 'itinerary' });
-    Notice.belongsTo(Event, { targetKey: 'public_id', foreignKey: 'event' });
     return Notice;
 };

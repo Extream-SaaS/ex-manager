@@ -1,6 +1,10 @@
-module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
-    class UserNotice extends Model {}
-    const Notice = require('./notice')(sequelize, { Sequelize, Model, DataTypes });
+module.exports = (sequelize, {Sequelize, Model, DataTypes}) => {
+    class UserNotice extends Model {
+        static associate(models) {
+            models.UserNotice.belongsTo(models.Notice, {targetKey: 'public_id', foreignKey: 'notice'});
+        }
+    }
+
     UserNotice.init({
         status: {
             type: DataTypes.STRING,
@@ -13,7 +17,6 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'UserNotice'
     });
-    Notice.hasMany(UserNotice, { sourceKey: 'public_id', foreignKey: 'notice'});
-    UserNotice.belongsTo(Notice, { targetKey: 'public_id', foreignKey: 'notice' });
+
     return UserNotice;
 };

@@ -1,6 +1,11 @@
-module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
-    const Page = require('./page')(sequelize, { Sequelize, Model, DataTypes });
-    class Organisation extends Model {}
+module.exports = (sequelize, {Sequelize, Model, DataTypes}) => {
+    class Organisation extends Model {
+        static associate(models) {
+            models.Organisation.hasMany(models.Organisation, {sourceKey: 'public_id', foreignKey: 'parent'});
+            models.Organisation.belongsTo(models.Page, {targetKey: 'public_id', foreignKey: 'landing_page'});
+            models.Organisation.hasMany(models.Event, {sourceKey: 'public_id', foreignKey: 'organisation'});
+        }
+    }
 
     Organisation.init({
         public_id: {
@@ -26,8 +31,5 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Organisation'
     });
-    // Organisation.belongsTo(Organisation, { targetKey: 'public_id', foreignKey: 'parent' });
-    Organisation.hasMany(Organisation, { sourceKey: 'public_id',  foreignKey: 'parent' });
-    Organisation.belongsTo(Page, { targetKey: 'public_id', foreignKey: 'landing_page' });
     return Organisation;
 };

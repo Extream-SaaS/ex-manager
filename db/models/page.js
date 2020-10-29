@@ -1,5 +1,9 @@
-module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
-    class Page extends Model {}
+module.exports = (sequelize, {Sequelize, Model, DataTypes}) => {
+    class Page extends Model {
+        static associate(models) {
+            models.Page.hasOne(models.Page, {sourceKey: 'public_id', foreignKey: 'parent'});
+        }
+    }
 
     Page.init({
         public_id: {
@@ -28,6 +32,5 @@ module.exports = (sequelize, { Sequelize, Model, DataTypes }) => {
         sequelize,
         modelName: 'Page'
     });
-    Page.hasOne(Page, { sourceKey: 'public_id', foreignKey: 'parent' });
     return Page;
 };

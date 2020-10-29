@@ -24,12 +24,21 @@ if (port) {
 
 const sequelize = new sequelizeLib.Sequelize(process.env.CLOUD_SQL_DATABASE, process.env.CLOUD_SQL_USERNAME, process.env.CLOUD_SQL_PASSWORD, config);
 
-const Page = PageModel(sequelize, sequelizeLib);
-const Organisation = OrganisationModel(sequelize, sequelizeLib);
-const Event = EventModel(sequelize, sequelizeLib);
-const Itinerary = ItineraryModel(sequelize, sequelizeLib);
-const Notice = NoticeModel(sequelize, sequelizeLib);
-const UserNotice = UserNoticeModel(sequelize, sequelizeLib);
+PageModel(sequelize, sequelizeLib);
+OrganisationModel(sequelize, sequelizeLib);
+EventModel(sequelize, sequelizeLib);
+ItineraryModel(sequelize, sequelizeLib);
+NoticeModel(sequelize, sequelizeLib);
+UserNoticeModel(sequelize, sequelizeLib);
+
+for (const model in sequelize.models) {
+    if (Object.prototype.hasOwnProperty.call(sequelize.models, model)) {
+        if (typeof sequelize.models[model].associate === 'function') {
+            sequelize.models[model].associate(sequelize.models);
+        }
+    }
+}
+
 module.exports = async () => {
     if (process.env.MIGRATE === 'migration') {
         await sequelize.sync({ alter: true });
@@ -37,11 +46,6 @@ module.exports = async () => {
     }
     return {
         sequelize,
-        Page,
-        Organisation,
-        Event,
-        Itinerary,
-        Notice,
-        UserNotice,
+        ...sequelize.models
     };
 };
