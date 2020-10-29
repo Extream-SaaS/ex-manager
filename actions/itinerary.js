@@ -110,6 +110,7 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
     let values;
     const where = {
       ...(payload.parent ? { parent: payload.parent } : {}),
+      ...(payload.id ? { public_id: payload.id } : {}),
       ...(payload.status ? { status: payload.status } : {}),
     };
     if (payload.event) {
