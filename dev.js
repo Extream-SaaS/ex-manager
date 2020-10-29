@@ -163,7 +163,7 @@ payload = {
   action: 'itinerary',
   command: 'get',
   payload: {
-    parent: "2880a8db-2a93-4410-a345-4a5da64808eb"
+    parent: "683fe946-350f-48c2-b7a0-df4754508abf"
   },
   user: {
     id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',

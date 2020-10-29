@@ -68,7 +68,7 @@ const update = async ({ source, domain, action, command, socketId, payload, user
       where: {
         public_id: payload.id 
       },
-      exclude: ['id']
+      exclude: ['id'],
     });
     if (itinerary === null) {
       throw new Error('itinerary not found');
