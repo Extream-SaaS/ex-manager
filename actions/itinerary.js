@@ -109,11 +109,9 @@ const get = async ({ source, domain, action, command, socketId, payload, user })
   try {
     let values;
     const where = {
-      parent: payload.parent,
+      ...(payload.parent ? { parent: payload.parent } : {}),
+      ...(payload.status ? { status: payload.status } : {}),
     };
-    if (payload.status) {
-      where.status = payload.status;
-    }
     if (payload.event) {
       const event = await Event.findOne({ 
         where: {
