@@ -58,6 +58,9 @@ const read = async ({ source, domain, action, command, socketId, payload, user }
     }
     await publish('ex-gateway', source, { domain, action, command, payload: itinerary.dataValues, user, socketId });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      return error;
+    }
     await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
   }
 };

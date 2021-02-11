@@ -21,21 +21,21 @@ let payload, data, event;
 // });
 
 // // associate itinerary item
-// payload = {
-//   domain: 'admin',
-//   action: 'itinerary',
-//   command: 'read',
-//   payload: {
-//     id: '0d84ac76-5d00-4969-9312-440900fa6eb3'
-//   },
-//   user: {
-//     id: "091e8b52-8506-4512-b75e-149ee51c4f04",
-//     username: "tester",
-//     fields: {
-//       custom: "fields"
-//     }
-//   }
-// };
+payload = {
+  domain: 'admin',
+  action: 'itinerary',
+  command: 'read',
+  payload: {
+    id: '683fe946-350f-48c2-b7a0-df4754508abf'
+  },
+  user: {
+    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+    username: "tester",
+    fields: {
+      custom: "fields"
+    }
+  }
+};
 // data = Buffer.from(JSON.stringify(payload)).toString('base64');
 // event = {
 //   data
@@ -158,21 +158,21 @@ let payload, data, event;
 //   },
 //   socketId: 'XbTiLsd9CmFwzEafAAAA'
 // };
-payload = {
-  domain: 'consumer',
-  action: 'itinerary',
-  command: 'get',
-  payload: {
-    parent: "683fe946-350f-48c2-b7a0-df4754508abf"
-  },
-  user: {
-    id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
-    username: 'tester',
-    fields: { custom: 'fields' },
-    token: 'e7c070e8d69b28093154bb7c4ca7602af8bd1cd4'
-  },
-  socketId: 'XbTiLsd9CmFwzEafAAAA'
-};
+// payload = {
+//   domain: 'consumer',
+//   action: 'itinerary',
+//   command: 'get',
+//   payload: {
+//     parent: "683fe946-350f-48c2-b7a0-df4754508abf"
+//   },
+//   user: {
+//     id: '8c3b38a3-e394-42dc-9c7e-5a741f238061',
+//     username: 'tester',
+//     fields: { custom: 'fields' },
+//     token: 'e7c070e8d69b28093154bb7c4ca7602af8bd1cd4'
+//   },
+//   socketId: 'XbTiLsd9CmFwzEafAAAA'
+// };
 data = Buffer.from(JSON.stringify(payload)).toString('base64');
 event = {
   data
