@@ -33,18 +33,25 @@ const create = async ({source, domain, action, command, socketId, payload, user}
 };
 const read = async ({ source, domain, action, command, socketId, payload, user }) => {
   try {
-    console.log('reading');
-    const organisation = await Organisation.findOne({ 
-      where: {
-        public_id: payload.id 
-      },
-      exclude: ['id']
-    });
-    if (organisation === null) {
-      throw new Error('organisation not found');
+    if (payload.id) {
+      const organisation = await Organisation.findOne({ 
+        where: {
+          public_id: payload.id 
+        },
+        exclude: ['id']
+      });
+      if (organisation === null) {
+        throw new Error('organisation not found');
+      }
+      await publish('ex-gateway', source, { domain, action, command, payload: organisation.dataValues, user, socketId });
+    } else if (user.user_type === 'chief') {
+      const organisations = await Organisation.findAll({
+        exclude: ['id']
+      });
+      await publish('ex-gateway', source, { domain, action, command, payload: organisations, user, socketId });
+    } else {
+      throw new Error('not permitted');
     }
-    console.log(organisation.dataValues);
-    await publish('ex-gateway', source, { domain, action, command, payload: organisation.dataValues, user, socketId });
   } catch (error) {
     console.log('publishing error', error);
     await publish('ex-gateway', source, { error: error.message, domain, action, command, payload, user, socketId });
