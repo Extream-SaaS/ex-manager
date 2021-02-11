@@ -21,21 +21,21 @@ let payload, data, event;
 // });
 
 // // associate itinerary item
-payload = {
-  domain: 'admin',
-  action: 'itinerary',
-  command: 'read',
-  payload: {
-    id: '683fe946-350f-48c2-b7a0-df4754508abf'
-  },
-  user: {
-    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
-    username: "tester",
-    fields: {
-      custom: "fields"
-    }
-  }
-};
+// payload = {
+//   domain: 'admin',
+//   action: 'itinerary',
+//   command: 'read',
+//   payload: {
+//     id: '683fe946-350f-48c2-b7a0-df4754508abf'
+//   },
+//   user: {
+//     id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+//     username: "tester",
+//     fields: {
+//       custom: "fields"
+//     }
+//   }
+// };
 // data = Buffer.from(JSON.stringify(payload)).toString('base64');
 // event = {
 //   data
@@ -173,6 +173,20 @@ payload = {
 //   },
 //   socketId: 'XbTiLsd9CmFwzEafAAAA'
 // };
+payload = {
+  domain: 'admin',
+  action: 'organisation',
+  command: 'read',
+  payload: {},
+  user: {
+    id: "091e8b52-8506-4512-b75e-149ee51c4f04",
+    username: "tester",
+    fields: {
+      custom: "fields"
+    },
+    user_type: 'chief',
+  }
+};
 data = Buffer.from(JSON.stringify(payload)).toString('base64');
 event = {
   data

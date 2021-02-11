@@ -48,7 +48,13 @@ const read = async ({ source, domain, action, command, socketId, payload, user }
       const organisations = await Organisation.findAll({
         exclude: ['id']
       });
-      await publish('ex-gateway', source, { domain, action, command, payload: organisations, user, socketId });
+      const dataOrgs = organisations.map((organisation) => {
+        return organisation.dataValues;
+      });
+      if (process.env.NODE_ENV !== 'production') {
+        return dataOrgs;
+      }
+      await publish('ex-gateway', source, { domain, action, command, payload: dataOrgs, user, socketId });
     } else {
       throw new Error('not permitted');
     }
