@@ -44,6 +44,19 @@ const read = async ({ source, domain, action, command, socketId, payload, user }
         throw new Error('organisation not found');
       }
       await publish('ex-gateway', source, { domain, action, command, payload: organisation.dataValues, user, socketId });
+    } else if (payload.parent) {
+      const organisations = await Organisation.findAll({
+        where: {
+          parent: payload.parent,
+        },
+      });
+      const dataOrgs = organisations.map((organisation) => {
+        return organisation.dataValues;
+      });
+      if (process.env.NODE_ENV !== 'production') {
+        return dataOrgs;
+      }
+      await publish('ex-gateway', source, { domain, action, command, payload: dataOrgs, user, socketId });
     } else if (user.user_type === 'chief') {
       const organisations = await Organisation.findAll({
         exclude: ['id']
